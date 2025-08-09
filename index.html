@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guitar Tuner</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <style>
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji; background: linear-gradient(#0b1220, #0f172a); }
+    .card { max-width: 720px; margin: 32px auto; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,.15); border-radius: 16px; padding: 24px; color: #e5e7eb; }
+    .title { color: white; font-weight: 700; font-size: 20px; display:flex; align-items:center; justify-content:space-between; }
+    .pill { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: 9999px; padding: 6px 10px; font-size: 12px; }
+    .bignote { font-size: 64px; font-weight: 800; line-height: 1; color: white; text-align:center; }
+    .sub { text-align:center; opacity:.9; margin-top: 6px; }
+    .needlewrap { background: rgba(255,255,255,.08); border-radius: 16px; padding: 24px; margin-top: 16px; position: relative; height: 140px; }
+    .bar { position:absolute; left:16px; right:16px; bottom: 28px; height: 4px; background: rgba(255,255,255,.25); border-radius: 2px; }
+    .center { position:absolute; top: 24px; bottom: 24px; left: 50%; width: 2px; transform: translateX(-50%); background: rgba(255,255,255,.6); }
+    .tick { position:absolute; top: 40px; bottom: 40px; width: 2px; background: rgba(255,255,255,.35); }
+    .needle { position:absolute; left: 50%; bottom: 28px; width: 2px; height: 110px; background: #fff; transform-origin: bottom center; transform: translateX(-50%) rotate(0deg); border-radius: 2px; }
+    .row { display:flex; gap: 12px; }
+    .btn { flex:1; padding: 12px 14px; border-radius: 12px; border: 0; font-weight: 600; color: white; cursor: pointer; }
+    .start { background: #10b981; }
+    .stop { background: #ef4444; }
+    .ghost { background: rgba(255,255,255,.1); }
+    .hint { font-size: 12px; opacity: .8; margin-top: 8px; }
+    input[type=range] { accent-color: #38bdf8; }
+    .a4wrap { display:flex; gap: 8px; align-items:center; }
+    .a4val { width: 40px; text-align:right; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="title">
+      <div>Guitar Tuner</div>
+      <div class="a4wrap">
+        <span class="pill">A4</span>
+        <input id="a4" type="range" min="430" max="450" step="1" value="440"/>
+        <span id="a4val" class="a4val">440</span>
+      </div>
+    </div>
+
+    <div style="margin-top:16px; background: rgba(0,0,0,.25); border-radius: 16px; padding: 24px;">
+      <div id="note" class="bignote">—</div>
+      <div id="freq" class="sub">Play a note to tune</div>
+    </div>
+
+    <div class="needlewrap">
+      <div class="bar"></div>
+      <div class="center"></div>
+      <!-- ticks -->
+      <div id="ticks"></div>
+      <div id="needle" class="needle"></div>
+    </div>
+
+    <div class="row" style="margin-top:16px;">
+      <button id="start" class="btn start">Start microphone</button>
+      <button id="stop" class="btn stop">Stop</button>
+      <button id="cal" class="btn ghost" title="Calibrate A4 using current pitch">Calibrate</button>
+    </div>
+
+    <div id="err" class="hint" style="color:#fecaca; display:none;"></div>
+    <div class="hint">Tip: Tune one string at a time, in a quiet room. Pluck near the neck to emphasize the fundamental.</div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
